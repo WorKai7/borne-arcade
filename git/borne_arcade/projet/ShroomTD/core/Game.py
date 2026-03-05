@@ -309,7 +309,9 @@ class Game:
                     self.window.blit(circle, (pygame.mouse.get_pos()[0]-circle.get_width()/2, pygame.mouse.get_pos()[1]-circle.get_height()/2))
                     self.window.blit(available_tower.sprite, (pygame.mouse.get_pos()[0]-available_tower.width/2, pygame.mouse.get_pos()[1]-available_tower.height/2))
 
+            config.draw_cursor(self.window)
             pygame.display.flip()
+            config.handle_arcade_inputs()
 
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
