@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html><head><title>OsuTile - Documentation</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+.file { margin: 20px 0; border: 1px solid #ddd; }
+.file-header { background: #e0e0e0; padding: 5px; }
+</style>
+</head><body>
+<h1>OsuTile</h1>
+<div class='file'>
+<div class='file-header'><h2>config.py</h2></div>
+<pre>
+# config.py
+
+import pygame
+
+# === Fenêtre ===
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 960
+FPS = 60
+FULLSCREEN = True
+
+# === Affichage ===
+BACKGROUND_COLOR = (0, 0, 0)
+LANE_COLOR = (200, 200, 200)
+TEXT_COLOR = (255, 255, 255)
+HIGHLIGHT_COLOR = (255, 255, 0)
+
+# === Jeu ===
+LANE_COUNT = 4
+TILE_COLOR = (0, 150, 255)
+HIT_LINE_Y = 800
+FALL_TIME = 1.5
+TILE_HEIGHT = 50
+HIT_BOX_PIXEL = 30  # Tolérance
+
+# === Contrôles ===
+# Mappage des touches de jeu par colonne
+
+KEY_MAPPING = {0: pygame.K_t, 1: pygame.K_y, 2: pygame.K_a, 3: pygame.K_z}
+
+PAUSE_KEY = pygame.K_f
+
+# Contrôles de navigation dans les menus
+MENU_UP_KEY = pygame.K_UP
+MENU_DOWN_KEY = pygame.K_DOWN
+MENU_SELECT_KEY = pygame.K_g
+MENU_BACK_KEY = pygame.K_h
+
+# Contrôles pour les menus (pause, fin)
+
+MENU_RESUME_KEY = pygame.K_g
+MENU_QUIT_KEY = pygame.K_h
+MENU_BACK_TO_MENU_KEY = pygame.K_s
+MENU_RETRY_KEY = pygame.K_d
+
+# === Fichiers ===
+BEATMAP_FOLDER = "beatmaps"
+ASSETS_FOLDER = "assets"
+
+# === Textes d'interface ===
+MENU_TITLE = "Piano Tile Arcade"
+SELECT_PROMPT = "Sélectionne une chanson"
+</pre>
+</div>
+<div class='file'>
+<div class='file-header'><h2>game.py</h2></div>
+<pre>
+import pygame
+import time
+import os
+import importlib.util
+from config import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    BACKGROUND_COLOR,
+    TILE_COLOR,
+    HIT_LINE_Y,
+    FPS,
+    LANE_COUNT,
+    ASSETS_FOLDER,
+    KEY_MAPPING,
+    PAUSE_KEY,
+    HIT_BOX_PIXEL,
+    TILE_HEIGHT,
+    MENU_RESUME_KEY,
+    MENU_QUIT_KEY,
+    MENU_BACK_TO_MENU_KEY,
+    MENU_RETRY_KEY,
+    FULLSCREEN,
+)
+from tile import Tile
+
+
+def load_beatmap(filename):
+    map_name = os.path.splitext(filename)[0]
+    map_path = os.path.join("maps", f"{map_name}.py")
+    spec = importlib.util.spec_from_file_location("beatmap_module", map_path)
+    beatmap_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(beatmap_module)
+    return beatmap_module.beatmap
+
+
+def draw_pause_menu(screen, font):
+    screen.fill(BACKGROUND_COLOR)
+    text = font.render("Pause", True, (255, 255, 255))
+    resume = font.render("Entrée : reprendre", True, (200, 200, 200))
+    quit_ = font.render("Q : quitter", True, (200, 200, 200))
+    screen.blit(text, (SCREEN_WIDTH // 2 - text.get_width() // 2, 300))
+    screen.blit(resume, (SCREEN_WIDTH // 2 - resume.get_width() // 2, 400))
+    screen.blit(quit_, (SCREEN_WIDTH // 2 - quit_.get_width() // 2, 450))
+    pygame.display.flip()
+
+
+def draw_scene(screen, font, tiles, current_time, score, combo, feedbacks):
+    screen.fill(BACKGROUND_COLOR)
+    pygame.draw.line(
+        screen, (255, 0, 0), (0, HIT_LINE_Y), (SCREEN_WIDTH, HIT_LINE_Y), 3
+    )
+    for tile in tiles:
+        if tile.hit:
+            continue
+        y = tile.get_y(current_time)
+        if y &gt; SCREEN_HEIGHT - 60:
+            continue
+        x = tile.lane * (SCREEN_WIDTH // LANE_COUNT)
+        tile.draw(screen, x, SCREEN_WIDTH // LANE_COUNT, current_time, TILE_COLOR)
+    # Affichage score et combo
+    screen.blit(
+        font.render(f"Score : {score}", True, (255, 255, 255)), (10, SCREEN_HEIGHT - 80)
+    )
+    screen.blit(
+        font.render(f"Combo : {combo}", True, (200, 200, 200)), (10, SCREEN_HEIGHT - 40)
+    )
+    for fb in feedbacks[:]:
+        text, t0, lane = fb
+        if current_time - t0 &lt; 300:
+            color = (255, 255, 255) if text == "Perfect" else (255, 50, 50)
+            surf = font.render(text, True, color)
+            x = lane * (SCREEN_WIDTH // LANE_COUNT) + 20
+            screen.blit(surf, (x, HIT_LINE_Y - 40))
+        else:
+            feedbacks.remove(fb)
+    pygame.display.flip()
+
+
+def countdown(screen, font, tiles, current_time, score, combo, feedbacks):
+    for i in range(3, 0, -1):
+        draw_scene(screen, font, tiles, current_time, score, combo, feedbacks)
+        txt = font.render(str(i), True, (255, 255, 255))
+        screen.blit(txt, (SCREEN_WIDTH // 2 - txt.get_width() // 2, SCREEN_HEIGHT // 2))
+        pygame.display.flip()
+        time.sleep(1)
+
+
+def end_screen(screen, font, score, total_notes, max_combo):
+    screen.fill(BACKGROUND_COLOR)
+    title = font.render("Fin de la partie", True, (255, 255, 255))
+    score_txt = font.render(f"Score final : {score}", True, (255, 255, 255))
+    percent = (score / total_notes) * 100 if total_notes &gt; 0 else 0
+    percent_txt = font.render(f"Précision : {percent:.1f}%", True, (0, 255, 255))
+    combo_txt = font.render(f"Combo max : {max_combo}", True, (255, 255, 0))
+    retry = font.render("Entrée : Rejouer", True, (200, 200, 200))
+    menu = font.render("M : Menu", True, (200, 200, 200))
+    quit_ = font.render("Q : Quitter", True, (200, 200, 200))
+    screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 180))
+    screen.blit(score_txt, (SCREEN_WIDTH // 2 - score_txt.get_width() // 2, 250))
+    screen.blit(percent_txt, (SCREEN_WIDTH // 2 - percent_txt.get_width() // 2, 300))
+    screen.blit(combo_txt, (SCREEN_WIDTH // 2 - combo_txt.get_width() // 2, 350))
+    screen.blit(retry, (SCREEN_WIDTH // 2 - retry.get_width() // 2, 420))
+    screen.blit(menu, (SCREEN_WIDTH // 2 - menu.get_width() // 2, 470))
+    screen.blit(quit_, (SCREEN_WIDTH // 2 - quit_.get_width() // 2, 520))
+    pygame.display.flip()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return "quit"
+            elif event.type == pygame.KEYDOWN:
+                if event.key == MENU_RETRY_KEY:
+                    return "retry"
+                elif event.key == MENU_BACK_TO_MENU_KEY:
+                    return "menu"
+                elif event.key == MENU_QUIT_KEY:
+                    return "quit"
+
+
+def play_map(filename):
+    beatmap = load_beatmap(filename)
+    tiles = [Tile(lane, time) for lane, time in beatmap]
+    audio_file = os.path.join(ASSETS_FOLDER, os.path.splitext(filename)[0] + ".mp3")
+
+    flags = pygame.HWSURFACE | pygame.DOUBLEBUF
+    if FULLSCREEN :
+        flags |= pygame.FULLSCREEN
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), flags)
+    clock = pygame.time.Clock()
+    font = pygame.font.SysFont(None, 48)
+
+    pygame.mixer.init()
+    if os.path.exists(audio_file):
+        pygame.mixer.music.load(audio_file)
+        pygame.mixer.music.play()
+    else:
+        print(f" Audio manquant : {audio_file}")
+
+    start_time = time.time()
+    paused = False
+    score, combo = 0, 0
+    max_combo = 0
+    feedbacks = []
+    running = True
+
+    total_notes = len(tiles)
+
+    while running:
+        current_time = (time.time() - start_time) * 1000 if not paused else current_time
+        screen.fill(BACKGROUND_COLOR)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return "quit"
+            elif event.type == pygame.KEYDOWN:
+                if event.key == PAUSE_KEY:
+                    paused = True
+                    pygame.mixer.music.pause()
+                    draw_pause_menu(screen, font)
+                    while paused:
+                        for pe in pygame.event.get():
+                            if pe.type == pygame.QUIT:
+                                return "quit"
+                            elif pe.type == pygame.KEYDOWN:
+                                if pe.key == MENU_RESUME_KEY:
+                                    countdown(
+                                        screen,
+                                        font,
+                                        tiles,
+                                        current_time,
+                                        score,
+                                        combo,
+                                        feedbacks,
+                                    )
+                                    start_time = time.time() - (current_time / 1000)
+                                    pygame.mixer.music.unpause()
+                                    paused = False
+                                elif pe.key == MENU_QUIT_KEY:
+                                    return "menu"
+                else:
+                    for lane, key in KEY_MAPPING.items():
+                        if key is not None and event.key == key:
+                            for tile in tiles:
+                                if tile.hit:
+                                    continue
+                                tile_y = tile.get_y(current_time)
+                                top = tile_y
+                                bottom = tile_y + TILE_HEIGHT
+                                if tile.lane == lane and (
+                                    top &lt;= HIT_LINE_Y + HIT_BOX_PIXEL
+                                    and bottom &gt;= HIT_LINE_Y - HIT_BOX_PIXEL
+                                ):
+                                    tile.hit = True
+                                    score += 1
+                                    combo += 1
+                                    if combo &gt; max_combo:
+                                        max_combo = combo
+                                    feedbacks.append(("Perfect", current_time, lane))
+                                    break
+                            else:
+                                combo = 0
+                                feedbacks.append(("Miss", current_time, lane))
+
+        # Combo reset si une tuile sort de l'écran
+        for tile in tiles:
+            if not tile.hit and tile.get_y(current_time) &gt; SCREEN_HEIGHT:
+                tile.hit = True
+                combo = 0
+                feedbacks.append(("Miss", current_time, tile.lane))
+
+        draw_scene(screen, font, tiles, current_time, score, combo, feedbacks)
+
+        if all(tile.hit for tile in tiles):
+            pygame.mixer.music.stop()
+            result = end_screen(screen, font, score, total_notes, max_combo)
+            return result
+
+        clock.tick(FPS)
+
+    pygame.quit()
+</pre>
+</div>
+<div class='file'>
+<div class='file-header'><h2>main.py</h2></div>
+<pre>
+import os
+import subprocess
+from menu import run_menu
+
+
+def ensure_maps_exported():
+    osu_folder = "beatmaps"
+    map_folder = "maps"
+
+    os.makedirs(map_folder, exist_ok=True)
+    for filename in os.listdir(osu_folder):
+        if filename.endswith(".osu"):
+            map_name = os.path.splitext(filename)[0]
+            osu_path = os.path.join(osu_folder, filename)
+            py_path = os.path.join(map_folder, f"{map_name}.py")
+
+            if not os.path.exists(py_path):
+                print(f"Génération de {py_path}")
+                subprocess.run(["python3", "tools/export_map.py", osu_path, py_path])
+
+
+if __name__ == "__main__":
+    ensure_maps_exported()
+    run_menu()
+</pre>
+</div>
+<div class='file'>
+<div class='file-header'><h2>map_parser.py</h2></div>
+<pre>
+def parse_osu_file(filepath, lane_count=4):
+    notes = []
+    with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+        lines = f.readlines()
+
+    in_hit_objects = False
+    for line in lines:
+        line = line.strip()
+        if line == "[HitObjects]":
+            in_hit_objects = True
+            continue
+        if in_hit_objects:
+            if not line or line.startswith("["):
+                break
+            parts = line.split(",")
+            if len(parts) &gt;= 3:
+                x = int(parts[0])
+                time = int(parts[2])
+                lane = x * lane_count // 512
+                notes.append({"time": time, "lane": lane})
+    return notes
+</pre>
+</div>
+<div class='file'>
+<div class='file-header'><h2>menu.py</h2></div>
+<pre>
+import pygame
+import os
+import sys
+from config import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    BACKGROUND_COLOR,
+    TEXT_COLOR,
+    HIGHLIGHT_COLOR,
+    FPS,
+    BEATMAP_FOLDER,
+    MENU_TITLE,
+    SELECT_PROMPT,
+    MENU_UP_KEY,
+    MENU_DOWN_KEY,
+    MENU_SELECT_KEY,
+    MENU_QUIT_KEY,
+    FULLSCREEN,
+)
+from game import play_map
+
+
+def draw_gradient_background(screen, color1, color2):
+    """Dessine un fond dégradé vertical."""
+    for y in range(SCREEN_HEIGHT):
+        ratio = y / SCREEN_HEIGHT
+        r = int(color1[0] * (1 - ratio) + color2[0] * ratio)
+        g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
+        b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
+        pygame.draw.line(screen, (r, g, b), (0, y), (SCREEN_WIDTH, y))
+
+
+def neon_text(surface, text, font, pos, main_color, glow_color, glow_size=4):
+    """Affiche un texte avec effet néon."""
+    base = font.render(text, True, main_color)
+    for dx in range(-glow_size, glow_size + 1):
+        for dy in range(-glow_size, glow_size + 1):
+            if dx * dx + dy * dy &lt;= glow_size * glow_size:
+                glow = font.render(text, True, glow_color)
+                surface.blit(glow, (pos[0] + dx, pos[1] + dy))
+    surface.blit(base, pos)
+
+
+def run_menu():
+    pygame.init()
+    flags = pygame.FULLSCREEN if FULLSCREEN else 0
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),flags)
+    pygame.display.set_caption("Sélection de musique")
+    clock = pygame.time.Clock()
+    font = pygame.font.SysFont("Arial Black", 48, bold=True)
+    small_font = pygame.font.SysFont("Arial", 28, bold=True)
+
+    beatmaps = [f for f in os.listdir(BEATMAP_FOLDER) if f.endswith(".osu")]
+    selected_index = 0
+
+    # Couleurs arcade flashy
+    BG_TOP = (20, 20, 60)
+    BG_BOTTOM = (60, 0, 60)
+    NEON = (0, 255, 255)
+    NEON_GLOW = (0, 180, 255)
+    WHITE = (255, 255, 255)
+    YELLOW = (255, 255, 0)
+    SELECT_BG = (40, 0, 80)
+
+    running = True
+    while running:
+        draw_gradient_background(screen, BG_TOP, BG_BOTTOM)
+
+        # Titre avec effet néon
+        title_text = MENU_TITLE
+        title_pos = (SCREEN_WIDTH // 2 - font.size(title_text)[0] // 2, 60)
+        neon_text(screen, title_text, font, title_pos, NEON, NEON_GLOW, 8)
+
+        # Rectangle d'encadrement style arcade
+        margin_x, margin_y = 120, 170
+        rect_width = SCREEN_WIDTH - 2 * margin_x
+        rect_height = 60 * len(beatmaps) + 40
+        border_rect = pygame.Rect(margin_x, margin_y, rect_width, rect_height)
+        pygame.draw.rect(screen, NEON, border_rect, 6)
+        pygame.draw.rect(screen, WHITE, border_rect, 2)
+
+        # Affichage des beatmaps
+        for i, beatmap in enumerate(beatmaps):
+            # Affichage sans extension et avec espaces à la place des underscores
+            display_name = os.path.splitext(beatmap)[0].replace("_", " ")
+            y = margin_y + 20 + i * 60
+            x = SCREEN_WIDTH // 2
+            if i == selected_index:
+                # Fond de sélection flashy
+                select_rect = pygame.Rect(margin_x + 10, y - 8, rect_width - 20, 54)
+                pygame.draw.rect(screen, SELECT_BG, select_rect)
+                pygame.draw.rect(screen, YELLOW, select_rect, 3)
+                neon_text(
+                    screen,
+                    display_name,
+                    small_font,
+                    (x - small_font.size(display_name)[0] // 2, y),
+                    YELLOW,
+                    NEON_GLOW,
+                    4,
+                )
+            else:
+                neon_text(
+                    screen,
+                    display_name,
+                    small_font,
+                    (x - small_font.size(display_name)[0] // 2, y),
+                    WHITE,
+                    NEON_GLOW,
+                    2,
+                )
+
+        # Prompt en bas
+        prompt = SELECT_PROMPT + "  (H pour quitter)"
+        prompt_pos = (
+            SCREEN_WIDTH // 2 - small_font.size(prompt)[0] // 2,
+            SCREEN_HEIGHT - 60,
+        )
+        neon_text(screen, prompt, small_font, prompt_pos, NEON, NEON_GLOW, 3)
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == MENU_UP_KEY:
+                    selected_index = (selected_index - 1) % len(beatmaps)
+                elif event.key == MENU_DOWN_KEY:
+                    selected_index = (selected_index + 1) % len(beatmaps)
+                elif event.key == MENU_SELECT_KEY:
+                    result = play_map(beatmaps[selected_index])
+                    if result == "quit":
+                        running = False
+                elif event.key == MENU_QUIT_KEY:
+                    running = False
+
+        clock.tick(FPS)
+
+    pygame.quit()
+    sys.exit()
+</pre>
+</div>
+<div class='file'>
+<div class='file-header'><h2>tile.py</h2></div>
+<pre>
+import pygame
+from config import SCREEN_HEIGHT, TILE_HEIGHT, FALL_TIME
+
+
+class Tile:
+    def __init__(self, lane, time):
+        self.lane = lane
+        self.time = time  # en ms
+        self.hit = False
+
+    def get_y(self, current_time):
+        time_diff = (current_time - self.time) / 1000
+        return time_diff / FALL_TIME * SCREEN_HEIGHT
+
+    def draw(self, surface, x, width, current_time, color):
+        y = self.get_y(current_time)
+        if y &gt; SCREEN_HEIGHT:
+            return
+        pygame.draw.rect(surface, color, (x, y, width, TILE_HEIGHT))
+</pre>
+</div>
+</body></html>
