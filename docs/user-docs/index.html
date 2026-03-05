@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Guide Utilisateur - Borne Arcade</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            position: relative;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+
+        .section h3 {
+            font-size: 1.5rem;
+            color: #555;
+            margin: 20px 0 10px;
+        }
+
+        /* Contrôleur style arcade */
+        .arcade-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+            align-items: center;
+        }
+
+        .joystick-section {
+            background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+            border-radius: 30px;
+            padding: 30px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 3px solid #ffd700;
+        }
+
+        .joystick {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            background: #333;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 -5px 5px rgba(255,255,255,0.1);
+            border: 3px solid #666;
+        }
+
+        .joystick::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ffd700;
+        }
+
+        .joystick::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 20px;
+            background: #ffd700;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .directions {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+
+        .direction {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .direction .arrow {
+            font-size: 2rem;
+            color: #ffd700;
+        }
+
+        .buttons-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .button-card {
+            background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border: 3px solid #ffd700;
+        }
+
+        .button-card.gauche {
+            border-color: #ff4444;
+        }
+
+        .button-card.droite {
+            border-color: #44ff44;
+        }
+
+        .button-visual {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+            box-shadow: 0 10px 0 #999, 0 15px 20px rgba(0,0,0,0.3);
+            border: 2px solid #666;
+        }
+
+        .button-card.gauche .button-visual {
+            background: radial-gradient(circle at 30% 30%, #ff6666, #cc0000);
+            box-shadow: 0 10px 0 #990000;
+        }
+
+        .button-card.droite .button-visual {
+            background: radial-gradient(circle at 30% 30%, #66ff66, #00cc00);
+            box-shadow: 0 10px 0 #009900;
+        }
+
+        .button-label {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .button-action {
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+
+        .game-menu {
+            background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+            border-radius: 30px;
+            padding: 30px;
+            margin: 40px 0;
+            color: white;
+            border: 3px solid #ffd700;
+        }
+
+        .game-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .game-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .game-item.selected {
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.1);
+            transform: translateX(10px);
+        }
+
+        .game-item.selected .game-selector {
+            color: #ffd700;
+        }
+
+        .game-selector {
+            width: 30px;
+            height: 30px;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-selector svg {
+            width: 24px;
+            height: 24px;
+            fill: #ffd700;
+        }
+
+        .game-info {
+            flex: 1;
+        }
+
+        .game-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .game-description {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin: 30px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateX(10px);
+            background: #f0f3f8;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .tip {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .warning {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .badge.arcade {
+            background: #ffd700;
+            color: #1a1a1a;
+        }
+
+        .footer {
+            background: #1e1e2f;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .arcade-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .section h2 {
+                font-size: 1.5rem;
+            }
+            
+            .step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-bottom: 15px;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+        .section:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Guide Utilisateur</h1>
+            <p>Borne Arcade - Comment jouer ?</p>
+        </div>
+
+        <div class="content">
+            <!-- Vue d'ensemble -->
+            <div class="section">
+                <h2>Vue d'ensemble</h2>
+                <p style="font-size: 1.1rem; color: #555; line-height: 1.6; margin-bottom: 20px;">
+                    Bienvenue sur votre borne d'arcade ! Cette borne vous donne accès à une collection de jeux 
+                    contrôlables simplement avec un joystick et deux boutons. L'interface est conçue pour être 
+                    intuitive et accessible à tous.
+                </p>
+                <div class="tip">
+                    <strong>À savoir :</strong> La borne démarre automatiquement sur le menu principal. 
+                    Aucune manipulation complexe n'est nécessaire pour commencer à jouer !
+                </div>
+            </div>
+
+            <!-- Les commandes -->
+            <div class="section">
+                <h2>🎮 Les commandes</h2>
+                
+                <div class="arcade-controls">
+                    <!-- Joystick -->
+                    <div class="joystick-section">
+                        <h3 style="color: white; margin-bottom: 20px;">Joystick</h3>
+                        <div class="joystick"></div>
+                        <div class="directions">
+                            <div class="direction">
+                                <span class="arrow"></span>
+                                <span>Monter</span>
+                            </div>
+                            <div class="direction">
+                                <span class="arrow"></span>
+                                <span>Descendre</span>
+                            </div>
+                        </div>
+                        <p style="margin-top: 20px; color: #aaa;">Utilisez le joystick pour naviguer dans les menus</p>
+                    </div>
+
+                    <!-- Boutons -->
+                    <div class="buttons-section">
+                        <div class="button-card gauche">
+                            <div class="button-visual"></div>
+                            <div class="button-label">BOUTON GAUCHE</div>
+                            <div class="button-action">RETOUR / ANNULER</div>
+                            <p style="color: #aaa; margin-top: 10px;">En haut à gauche</p>
+                        </div>
+                        <div class="button-card gauche">
+                            <div class="button-visual"></div>
+                            <div class="button-label">BOUTON DROIT</div>
+                            <div class="button-action">VALIDER / CLIQUER</div>
+                            <p style="color: #aaa; margin-top: 10px;">En bas à droite</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning">
+                    <strong>Important :</strong> 
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Le bouton <strong>GAUCHE (haut)</strong> sert uniquement à revenir en arrière</li>
+                        <li>Le bouton <strong>DROIT (bas)</strong> sert à valider vos choix</li>
+                        <li>Ne pas appuyer trop fort sur les boutons (ils sont robustes mais pas incassables !)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Navigation dans le menu -->
+            <div class="section">
+                <h2>Navigation dans le menu</h2>
+
+                <!-- Exemple de menu -->
+                <div class="game-menu">
+                    <h3 style="color: white; margin-bottom: 20px;">MENU PRINCIPAL</h3>
+                    <div class="game-list">
+                        <div class="game-item selected">
+                            <div class="game-selector"></div>
+                            <div class="game-info">
+                                <div class="game-title">Pac-Man</div>
+                            </div>
+                        </div>
+                        <div class="game-item">
+                            <div class="game-selector"></div>
+                            <div class="game-info">
+                                <div class="game-title">Space Invaders</div>
+                            </div>
+                        </div>
+                        <div class="game-item">
+                            <div class="game-selector"></div>
+                            <div class="game-info">
+                                <div class="game-title">Snake</div>
+                            </div>
+                        </div>
+                        <div class="game-item">
+                            <div class="game-selector"></div>
+                            <div class="game-info">
+                                <div class="game-title">Puzzle Bobble</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color: #aaa; text-align: center; margin-top: 20px;">
+                        <span style="color: #ffd700;"></span> = Sélection actuelle
+                    </p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Choisir un jeu</h3>
+                        <p>Utilisez le joystick <strong>HAUT</strong> et <strong>BAS</strong> pour vous déplacer dans la liste des jeux. Le jeu sélectionné est mis en évidence.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Lancer le jeu</h3>
+                        <p>Une fois le jeu de votre choix sélectionné, appuyez sur le <strong>bouton DROIT (bas)</strong> pour lancer la partie.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Revenir au menu</h3>
+                        <p>Pendant une partie, appuyez sur le <strong>bouton GAUCHE (haut)</strong> pour revenir au menu principal.</p>
+                    </div>
+                </div>
+            </div>
+                <div class="tip" style="margin-top: 20px;">
+                    <strong>Selon le jeu :</strong> Les contrôles peuvent légèrement varier. 
+                    Un écran d'instructions est généralement affiché au début de chaque partie.
+                </div>
+            </div>
+
+            <!-- Guide rapide -->
+            <div class="section">
+                <h2>⚡ Guide rapide</h2>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 10px;"></div>
+                        <h4>Menu principal</h4>
+                        <p>Joystick haut et bas pour naviguer<br>Bouton DROIT pour valider</p>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 10px;"></div>
+                        <h4>En jeu</h4>
+                        <p>Joystick pour bouger<br>Bouton DROIT pour agir</p>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 10px;"></div>
+                        <h4>Retour</h4>
+                        <p>Bouton GAUCHE à tout moment<br>pour revenir au menu</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Résumé des commandes -->
+            <div class="section">
+                <h2>Résumé des commandes</h2>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%); padding: 20px; border-radius: 15px; color: white;">
+                    <div style="grid-column: span 2; text-align: center; padding: 10px; background: #ffd700; color: black; border-radius: 10px; margin-bottom: 10px;">
+                        <strong>COMMANDES RÉCAPITULATIVES</strong>
+                    </div>
+                    <div><strong>Joystick HAUT</strong></div>
+                    <div>Monter dans le menu</div>
+                    <div><strong>Joystick BAS</strong></div>
+                    <div>Descendre dans le menu</div>
+                    <div><strong>Bouton DROIT (bas)</strong></div>
+                    <div>Valider / Lancer le jeu / Action</div>
+                    <div><strong>Bouton GAUCHE (haut)</strong></div>
+                    <div>Retour / Annuler / Quitter</div>
+                </div>
+
+                <div class="success" style="margin-top: 20px;">
+                    <strong>Prêt à jouer ?</strong>
+                    <p>Amusez-vous bien sur votre borne d'arcade ! N'hésitez pas à essayer tous les jeux disponibles.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Documentation utilisateur - Dernière mise à jour : 05/03/2026</p>
+            <p>Pour toute assistance : <a href="#">support@borne-arcade.fr</a></p>
+        </div>
+    </div>
+</body>
+</html>
