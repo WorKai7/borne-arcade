@@ -3,6 +3,7 @@ import os
 import copy
 import json
 import towers
+import config
 from core.Map import Map
 from core.generateur_wave import wave
 from menus.Escape_menu import Escape_menu
@@ -108,6 +109,7 @@ class Game:
         while running:
             self.clock.tick(self.fps)
             self.current_tick += 1
+            config.handle_arcade_inputs()
             
             #Trier la liste des ennemis pour que les tours tirent sur le dernier ennemi
             self.enemies.sort(key=lambda enemy: enemy.distance_travelled, reverse=True)

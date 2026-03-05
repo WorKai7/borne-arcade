@@ -2,6 +2,7 @@ import pygame
 import os
 import ctypes
 import json
+import config
 from buttons.Bouton import Bouton
 from effects.effets import fondu_fermer, fondu_ouvrir
 from menus.Quit_confirm_menu import Quit_confirm_menu
@@ -123,6 +124,7 @@ class Menu:
         play_music(self.music, self.music_state)
 
         while running:
+            config.handle_arcade_inputs()
             self.draw_menu()
             running = self.handle_clicks()
             self.draw_sound_buttons()
