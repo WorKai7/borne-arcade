@@ -1,5 +1,6 @@
 import pygame
 import os
+import config
 from buttons.Bouton import Bouton
 from menus.Main_menu_confirm_menu import Main_menu_confirm_menu
 from effects.effets import balayage_haut, balayage_bas
@@ -78,6 +79,7 @@ class Escape_menu:
             self.restart_button.draw_and_scale(game.window)
             self.main_menu_button.draw_and_scale(game.window)
             self.draw_sound_buttons(game.window)
+            config.handle_arcade_inputs()
 
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:

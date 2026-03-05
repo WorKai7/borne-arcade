@@ -1,5 +1,6 @@
 import pygame
 import os
+import config
 from menus.Secondary_menu import Secondary_menu
 from buttons.Bouton import Bouton
 from effects.sound import play_sound
@@ -39,6 +40,7 @@ class Main_menu_confirm_menu(Secondary_menu):
             game.window.blit(self.text, (self.screen_size[0]/3.2, self.screen_size[1]/2.3))
             self.yes_button.draw_and_scale(game.window)
             self.no_button.draw_and_scale(game.window)
+            config.handle_arcade_inputs()
 
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:

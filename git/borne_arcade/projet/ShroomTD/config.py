@@ -11,23 +11,52 @@ RIGHT_KEY = pygame.K_RIGHT #joystick vers la droite
 CONFIRM_KEY = pygame.K_g #remplacement de clic gauche
 DESELECT_KEY = pygame.K_h #remplacement de clic droit
 
-def handle_arcade_inputs():
+ACCEL = 0.4
+MAX_SPEED = 6
+FRICTION = 0.3
 
+vx = 0
+vy = 0
+
+def handle_arcade_inputs():
+    global vx, vy
+
+    # touches maintenues
+    keys = pygame.key.get_pressed()
+
+    # accélération
+    if keys[LEFT_KEY]:
+        vx -= ACCEL
+    if keys[RIGHT_KEY]:
+        vx += ACCEL
+    if keys[UP_KEY]:
+        vy -= ACCEL
+    if keys[DOWN_KEY]:
+        vy += ACCEL
+
+    # friction (ralentit quand on relâche)
+    if not (keys[LEFT_KEY] or keys[RIGHT_KEY]):
+        if vx > 0:
+            vx = max(0, vx - FRICTION)
+        elif vx < 0:
+            vx = min(0, vx + FRICTION)
+
+    if not (keys[UP_KEY] or keys[DOWN_KEY]):
+        if vy > 0:
+            vy = max(0, vy - FRICTION)
+        elif vy < 0:
+            vy = min(0, vy + FRICTION)
+
+    # limite vitesse
+    vx = max(-MAX_SPEED, min(MAX_SPEED, vx))
+    vy = max(-MAX_SPEED, min(MAX_SPEED, vy))
+
+    x, y = pygame.mouse.get_pos()
+
+    pygame.mouse.set_pos((x + vx, y + vy))
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if event.key == UP_KEY:
-                position = pygame.mouse.get_pos()
-                pygame.mouse.set_pos([position[0],position[1]-1])
-            if event.key == DOWN_KEY:
-                position = pygame.mouse.get_pos()
-                pygame.mouse.set_pos([position[0],position[1]+1])
-            if event.key == LEFT_KEY:
-                position = pygame.mouse.get_pos()
-                pygame.mouse.set_pos([position[0]-1,position[1]])
-            if event.key == RIGHT_KEY:
-                position = pygame.mouse.get_pos()
-                pygame.mouse.set_pos([position[0]+1,position[1]])
             if event.key == CONFIRM_KEY:
                 fake_event = pygame.event.Event(
                     pygame.MOUSEBUTTONDOWN,
@@ -46,6 +75,3 @@ def handle_arcade_inputs():
                 {"key": pygame.K_ESCAPE}
                 )
                 pygame.event.post(fake_event)
-
-
-

@@ -1,5 +1,6 @@
 import pygame
 import os
+import config
 from buttons.Bouton import Bouton
 from menus.Secondary_menu import Secondary_menu
 from effects.sound import play_sound
@@ -39,6 +40,7 @@ class Quit_confirm_menu(Secondary_menu):
             menu.window.blit(self.text, (self.screen_size[0]/3.15, self.screen_size[1]/2.3))
             self.yes_button.draw_and_scale(menu.window)
             self.no_button.draw_and_scale(menu.window)
+            config.handle_arcade_inputs()
 
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
