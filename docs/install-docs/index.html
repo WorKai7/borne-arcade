@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             backdrop-filter: blur(10px);
         }
@@ -44,19 +45,24 @@
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
             animation: rotate 20s linear infinite;
         }
 
         @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .header h1 {
             font-size: 3.5rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             position: relative;
         }
 
@@ -75,7 +81,7 @@
             background: white;
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
             border: 1px solid rgba(102, 126, 234, 0.1);
         }
@@ -148,7 +154,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border: none;
             color: white;
             padding: 5px 15px;
@@ -159,7 +165,7 @@
         }
 
         .code-block .copy-btn:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .note {
@@ -283,27 +289,27 @@
             .header h1 {
                 font-size: 2rem;
             }
-            
+
             .header p {
                 font-size: 1rem;
             }
-            
+
             .content {
                 padding: 20px;
             }
-            
+
             .section {
                 padding: 20px;
             }
-            
+
             .section h2 {
                 font-size: 1.5rem;
             }
-            
+
             .step {
                 flex-direction: column;
             }
-            
+
             .step-number {
                 margin-bottom: 15px;
             }
@@ -315,6 +321,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -326,16 +333,40 @@
             opacity: 0;
         }
 
-        .section:nth-child(1) { animation-delay: 0.1s; }
-        .section:nth-child(2) { animation-delay: 0.2s; }
-        .section:nth-child(3) { animation-delay: 0.3s; }
-        .section:nth-child(4) { animation-delay: 0.4s; }
-        .section:nth-child(5) { animation-delay: 0.5s; }
-        .section:nth-child(6) { animation-delay: 0.6s; }
-        .section:nth-child(7) { animation-delay: 0.7s; }
-        .section:nth-child(8) { animation-delay: 0.8s; }
+        .section:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .section:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .section:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .section:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .section:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        .section:nth-child(7) {
+            animation-delay: 0.7s;
+        }
+
+        .section:nth-child(8) {
+            animation-delay: 0.8s;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -378,12 +409,13 @@
             <!-- Étape 1 -->
             <div class="section">
                 <h2>Installation de Raspberry Pi OS</h2>
-                
+
                 <div class="step">
                     <div class="step-number">1</div>
                     <div class="step-content">
                         <h3>Télécharger Raspberry Pi Imager</h3>
-                        <p>Téléchargez et installez <a href="https://www.raspberrypi.com/software/" target="_blank">Raspberry Pi Imager</a> sur votre ordinateur</p>
+                        <p>Téléchargez et installez <a href="https://www.raspberrypi.com/software/"
+                                target="_blank">Raspberry Pi Imager</a> sur votre ordinateur</p>
                     </div>
                 </div>
 
@@ -509,11 +541,31 @@ Terminal=true
 X-KeepTerminal=false</pre>
                     </div>
                 </div>
+
+                <div class="section" style="margin-top: 30px;">
+                    <h3>Installation des dépendances</h3>
+
+                    <p>Avant de lancer la borne, exécutez le script d'installation afin d'installer toutes les
+                        dépendances nécessaires.</p>
+
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+                        <pre>cd ~/git/borne-arcade
+chmod +x install.sh
+./install.sh</pre>
+                    </div>
+
+                    <div class="note">
+                        <strong>Note :</strong> Ce script installe automatiquement les dépendances nécessaires aux jeux
+                        (Python, Java, Love2D, etc.) ainsi que les bibliothèques Python présentes dans les fichiers
+                        <code>requirements.txt</code>.
+                    </div>
+                </div>
             </div>
 
             <!-- Étape 5 -->
             <div class="section">
-                <h2>5️⃣ Test final et redémarrage</h2>
+                <h2>Test final et redémarrage</h2>
 
                 <div class="code-block">
                     <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
@@ -525,49 +577,6 @@ sudo reboot</pre>
                 </div>
             </div>
 
-            <!-- Dépannage -->
-            <div class="section">
-                <h2>🔍 Dépannage rapide</h2>
-
-                <h3>Le jeu ne se lance pas au démarrage</h3>
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
-                    <pre># Vérifier que le fichier desktop est bien placé
-ls -la ~/.config/autostart/
-
-# Vérifier les permissions
-chmod +x ~/git/borne-arcade/lancerBorne.sh
-
-# Vérifier les logs
-cat ~/.xsession-errors</pre>
-                </div>
-
-                <h3>Problème de connexion SSH</h3>
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
-                    <pre># Sur le Pi directement (avec clavier/écran)
-# Vérifier l'adresse IP
-hostname -I
-
-# Activer SSH si désactivé
-sudo raspi-config
-# → Interface Options → SSH → Enable</pre>
-                </div>
-
-                <h3>Erreur "Permission denied"</h3>
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
-                    <pre>chmod +x ~/git/borne-arcade/lancerBorne.sh
-chmod +x ~/.config/autostart/borne.desktop</pre>
-                </div>
-
-                <h3>Le terminal ne se lance pas</h3>
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyToClipboard(this)">📋 Copier</button>
-                    <pre># Installer lxterminal si manquant
-sudo apt install -y lxterminal</pre>
-                </div>
-            </div>
 
             <!-- Résumé -->
             <div class="section">
@@ -588,7 +597,7 @@ sudo reboot</pre>
 
             <!-- Structure -->
             <div class="section">
-                <h2>📁 Structure finale attendue</h2>
+                <h2>Structure finale attendue</h2>
 
                 <div class="structure-tree">
                     <pre>/home/pi/
@@ -609,7 +618,8 @@ sudo reboot</pre>
 
                 <div class="note">
                     <strong>🔧 Le script lancerBorne.sh</strong>
-                    <p>Assurez-vous que ce fichier est présent dans le dépôt et contient les commandes nécessaires pour lancer votre jeu.</p>
+                    <p>Assurez-vous que ce fichier est présent dans le dépôt et contient les commandes nécessaires pour
+                        lancer votre jeu.</p>
                 </div>
 
                 <div class="warning">
@@ -654,7 +664,7 @@ git pull
             const codeBlock = button.parentElement;
             const pre = codeBlock.querySelector('pre');
             const text = pre.innerText;
-            
+
             navigator.clipboard.writeText(text).then(() => {
                 button.textContent = 'Copié !';
                 setTimeout(() => {
@@ -664,4 +674,5 @@ git pull
         }
     </script>
 </body>
+
 </html>
