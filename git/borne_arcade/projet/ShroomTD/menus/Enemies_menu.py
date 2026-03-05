@@ -1,5 +1,6 @@
 import pygame
 import os
+import config
 from buttons.Bouton import Bouton
 from effects.effets import fondu_fermer
 from effects.sound import play_sound, disable_music, enable_music
@@ -128,6 +129,7 @@ class Enemies_menu:
 
         running = 1
         while running:
+            config.handle_arcade_inputs()
             running = self.handle_clicks(window)
             self.draw_menu(window)
         return 1

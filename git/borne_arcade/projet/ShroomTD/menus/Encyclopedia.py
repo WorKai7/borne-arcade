@@ -1,5 +1,6 @@
 import pygame
 import os
+import config
 from buttons.Bouton import Bouton
 from effects.effets import fondu_fermer
 from effects.sound import play_sound, disable_music, enable_music
@@ -71,6 +72,7 @@ class Encyclopedia:
 
         running = 1
         while running:
+            config.handle_arcade_inputs()
             running = self.handle_click(window)
             window.blit(self.background, (0, 0))
             self.draw_sound_buttons(window)

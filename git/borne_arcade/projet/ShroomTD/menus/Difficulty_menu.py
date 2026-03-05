@@ -1,5 +1,6 @@
 import pygame
 import os
+import config
 from menus.Secondary_menu import Secondary_menu
 from buttons.Bouton import Bouton
 from effects.sound import play_sound
@@ -49,6 +50,7 @@ class Difficulty_menu(Secondary_menu):
             self.medium_button.draw_and_scale(menu.window)
             self.hard_button.draw_and_scale(menu.window)
             self.back_button.draw_and_scale(menu.window)
+            config.handle_arcade_inputs()
 
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
