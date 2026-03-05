@@ -33,7 +33,7 @@ jobs:
       
       - name: Generate documentation
         run: |
-          chmod +x git/borne_arcade/generate_docs.sh
+          chmod +x git/borne_arcade/generate-docs.sh
           ./git/borne_arcade/generate-docs.sh
       
       - name: Setup Pages
