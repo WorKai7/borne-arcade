@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Technique - Projets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: var(--mouse-y, 50%);
+            left: var(--mouse-x, 50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 80%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .menu-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .card-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+
+        .lang-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .lang-badge.java {
+            background: #f89820;
+        }
+
+        .lang-badge.python {
+            background: #3776ab;
+        }
+
+        .menu-card h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .menu-card p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .card-footer {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .menu-card:hover .card-footer {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .menu-card {
+                padding: 30px 20px;
+            }
+            
+            .menu-card h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .menu-card {
+                background: rgba(255,255,255,0.95);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Documentation Technique</h1>
+            <p>Sélectionnez un projet pour voir sa documentation</p>
+        </div>
+        <div class="menu-grid">
+            <a href="borne_menu/index.html" class="menu-card" style="animation-delay: 0.1s;">
+                <span class="lang-badge java">Java</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </div>
+                <h2>Menu Borne</h2>
+                <p>Documentation technique de l'interface de la borne interactive</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="Columns/index.html" class="menu-card" style="animation-delay: 0.2s;">
+                <span class="lang-badge java">Java</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>Columns</h2>
+                <p>Documentation technique du projet Columns (Java)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="DinoRail/index.html" class="menu-card" style="animation-delay: .3s;">
+                <span class="lang-badge java">Java</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>DinoRail</h2>
+                <p>Documentation technique du projet DinoRail (Java)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="InitialDrift/index.html" class="menu-card" style="animation-delay: .4s;">
+                <span class="lang-badge java">Java</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>InitialDrift</h2>
+                <p>Documentation technique du projet InitialDrift (Java)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="JavaSpace/index.html" class="menu-card" style="animation-delay: .5s;">
+                <span class="lang-badge java">Java</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>JavaSpace</h2>
+                <p>Documentation technique du projet JavaSpace (Java)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="Kowasu_Renga/index.html" class="menu-card" style="animation-delay: .6s;">
+                <span class="lang-badge java">Java</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>Kowasu_Renga</h2>
+                <p>Documentation technique du projet Kowasu_Renga (Java)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="Minesweeper/index.html" class="menu-card" style="animation-delay: .7s;">
+                <span class="lang-badge java">Java</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>Minesweeper</h2>
+                <p>Documentation technique du projet Minesweeper (Java)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="OsuTile/index.html" class="menu-card" style="animation-delay: .8s;">
+                <span class="lang-badge python">Python</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>OsuTile</h2>
+                <p>Documentation technique du projet OsuTile (Python)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="Pong/index.html" class="menu-card" style="animation-delay: .9s;">
+                <span class="lang-badge java">Java</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>Pong</h2>
+                <p>Documentation technique du projet Pong (Java)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="Puissance_X/index.html" class="menu-card" style="animation-delay: 1.0s;">
+                <span class="lang-badge java">Java</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>Puissance_X</h2>
+                <p>Documentation technique du projet Puissance_X (Java)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="ShroomTD/index.html" class="menu-card" style="animation-delay: 1.1s;">
+                <span class="lang-badge python">Python</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>ShroomTD</h2>
+                <p>Documentation technique du projet ShroomTD (Python)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="Snake_Eater/index.html" class="menu-card" style="animation-delay: 1.2s;">
+                <span class="lang-badge java">Java</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>Snake_Eater</h2>
+                <p>Documentation technique du projet Snake_Eater (Java)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+            <a href="TronGame/index.html" class="menu-card" style="animation-delay: 1.3s;">
+                <span class="lang-badge python">Python</span>
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                    </svg>
+                </div>
+                <h2>TronGame</h2>
+                <p>Documentation technique du projet TronGame (Python)</p>
+                <div class="card-footer">Voir la doc →</div>
+            </a>
+        </div>
+        <div style="text-align: center; margin-top: 40px; color: white; opacity: 0.8;">
+            <p>Documentation générée automatiquement • Dernière mise à jour : $(date +%Y-%m-%d)</p>
+        </div>
+    </div>
+
+    <script>
+        // Effet de brillance au survol
+        document.querySelectorAll('.menu-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body>
+</html>
