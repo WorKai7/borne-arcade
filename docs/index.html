@@ -22,7 +22,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             width: 100%;
         }
 
@@ -46,15 +46,15 @@
 
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
             padding: 20px;
         }
 
         .menu-card {
             background: white;
             border-radius: 20px;
-            padding: 40px 30px;
+            padding: 35px 25px;
             text-align: center;
             text-decoration: none;
             color: #333;
@@ -65,7 +65,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
         .menu-card:hover {
@@ -74,41 +74,42 @@
         }
 
         .card-icon {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .card-icon svg {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             fill: white;
         }
 
         .menu-card h2 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .menu-card p {
             color: #666;
-            line-height: 1.6;
-            font-size: 1.1rem;
+            line-height: 1.5;
+            font-size: 0.95rem;
         }
 
         .card-footer {
-            margin-top: 20px;
-            padding: 10px 30px;
+            margin-top: 15px;
+            padding: 8px 25px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-radius: 30px;
             font-weight: bold;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
 
@@ -132,14 +133,22 @@
         .menu-card {
             animation: fadeInUp 0.6s ease forwards;
             opacity: 0;
+            position: relative;
         }
 
         .menu-card:nth-child(1) { animation-delay: 0.1s; }
-        .menu-card:nth-child(2) { animation-delay: 0.3s; }
-        .menu-card:nth-child(3) { animation-delay: 0.5s; }
+        .menu-card:nth-child(2) { animation-delay: 0.2s; }
+        .menu-card:nth-child(3) { animation-delay: 0.3s; }
+        .menu-card:nth-child(4) { animation-delay: 0.4s; }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
             .header h1 {
                 font-size: 2rem;
             }
@@ -198,7 +207,7 @@
                     </svg>
                 </div>
                 <h2>Utilisateur</h2>
-                <p>Guides d'utilisation, tutoriels, et bonnes pratiques pour les utilisateurs.</p>
+                <p>Guides d'utilisation, tutoriels, et bonnes pratiques pour les utilisateurs de la borne.</p>
                 <div class="card-footer">Accéder →</div>
             </a>
 
@@ -211,20 +220,32 @@
                     </svg>
                 </div>
                 <h2>Installation</h2>
-                <p>Guide d'installation, prérequis, et configuration</p>
+                <p>Guide d'installation, prérequis, et configuration complète de la borne arcade.</p>
+                <div class="card-footer">Accéder →</div>
+            </a>
+
+            <!-- Carte Documentation Ajout de Jeu -->
+            <a href="newgame-docs/index.html" class="menu-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                    </svg>
+                </div>
+                <h2>Ajouter un jeu</h2>
+                <p>Guide complet pour intégrer un nouveau jeu : structure des dossiers, fichiers requis, et création du lanceur.</p>
                 <div class="card-footer">Accéder →</div>
             </a>
         </div>
 
-        <!-- Footer optionnel -->
+        <!-- Footer -->
         <div style="text-align: center; margin-top: 40px; color: white; opacity: 0.8;">
             <p>Dernière mise à jour : 2026</p>
         </div>
     </div>
 
-    <!-- Ajout d'un effet de particules optionnel -->
+    <!-- Effet de brillance au survol -->
     <script>
-        // Effet de brillance au survol (optionnel)
         document.querySelectorAll('.menu-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
