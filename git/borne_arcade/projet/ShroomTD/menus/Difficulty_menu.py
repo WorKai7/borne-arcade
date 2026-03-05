@@ -51,6 +51,7 @@ class Difficulty_menu(Secondary_menu):
             self.hard_button.draw_and_scale(menu.window)
             self.back_button.draw_and_scale(menu.window)
             config.handle_arcade_inputs()
+            config.draw_cursor(menu.window)
 
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:

@@ -121,6 +121,7 @@ class Magical_towers_menu:
             config.handle_arcade_inputs()
             running = self.handle_clicks(window)
             self.draw_menu(window)
+            config.draw_cursor(window)
         return 1
 
     def draw_menu(self, window) -> None:

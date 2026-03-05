@@ -88,6 +88,7 @@ class Encyclopedia:
                 self.magical_towers_button.draw_and_scale(window)
                 self.back_button.draw_and_scale(window)
 
+            config.draw_cursor(window)
             pygame.display.flip()
 
     def draw_sound_buttons(self, window) -> None:

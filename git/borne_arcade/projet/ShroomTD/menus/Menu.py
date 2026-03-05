@@ -129,6 +129,7 @@ class Menu:
             running = self.handle_clicks()
             self.draw_sound_buttons()
 
+            config.draw_cursor(self.window)
             pygame.display.flip()
 
         fondu_fermer(self.window, (self.width, self.height), 0.1, 15)

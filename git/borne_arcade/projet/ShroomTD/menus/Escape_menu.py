@@ -80,6 +80,7 @@ class Escape_menu:
             self.main_menu_button.draw_and_scale(game.window)
             self.draw_sound_buttons(game.window)
             config.handle_arcade_inputs()
+            config.draw_cursor(game.window)
 
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:

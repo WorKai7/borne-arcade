@@ -196,6 +196,7 @@ class Game:
                     self.upgrade_menu.second_upgrade_available = self.money >= self.selected_tower.upgrades[self.selected_tower.name]["1"][str(self.selected_tower.level[1]+1)]["upgrade_cost"]
 
             self.draw_window()
+            config.draw_cursor(self.window)
             pygame.display.flip()
 
         stop_music(self.map.music)

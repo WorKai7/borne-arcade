@@ -18,6 +18,8 @@ FRICTION = 0.3
 vx = 0
 vy = 0
 
+
+
 def handle_arcade_inputs():
     global vx, vy
 
@@ -75,3 +77,7 @@ def handle_arcade_inputs():
                 {"key": pygame.K_ESCAPE}
                 )
                 pygame.event.post(fake_event)
+
+def draw_cursor(surface):
+    x, y = pygame.mouse.get_pos()
+    pygame.draw.circle(surface, (255,255,255,255), (x,y),10)

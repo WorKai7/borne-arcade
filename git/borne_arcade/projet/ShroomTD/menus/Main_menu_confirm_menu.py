@@ -41,6 +41,7 @@ class Main_menu_confirm_menu(Secondary_menu):
             self.yes_button.draw_and_scale(game.window)
             self.no_button.draw_and_scale(game.window)
             config.handle_arcade_inputs()
+            config.draw_cursor(game.window)
 
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
