@@ -31,6 +31,7 @@ jobs:
 
       - name: Generate changelog with Ollama
         run: |
+          ollama serve &
           ollama run llama2 \
             --prompt "Generate a changelog for the PR with the following commits:\n$(git log origin/main..HEAD --oneline)" \
             > $FILE_NAME
