@@ -1,0 +1,41 @@
+name: Auto Changelog
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  generate-changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Ollama
+        run: |
+          curl -sSfL https://ollama.com/install.sh | sh
+          ollama pull llama2
+          ollama --version
+
+      - name: Generate changelog filename
+        id: changelog
+        run: |
+          FILE_NAME="changelog/changelog-$(date +'%d-%m-%Y-%H-%M-%S').md"
+          echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+          mkdir -p changelog
+          echo "Changelog file: $FILE_NAME"
+
+      - name: Generate changelog with Ollama
+        run: |
+          ollama generate llama2 \
+            --prompt "Generate a changelog for the PR with the following commits:\n$(git log origin/main..HEAD --oneline)" \
+            --output $FILE_NAME
+
+      - name: Add changelog to git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add $FILE_NAME
+          git commit -m "Add automated changelog $FILE_NAME" || echo "No changes to commit"
+          git push origin HEAD:${{ github.head_ref }}

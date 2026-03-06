@@ -12,7 +12,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ---- JAVA ----
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -26,7 +25,6 @@ jobs:
           reporter: github-pr-check
           level: error
 
-      # ---- PYTHON ----
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -38,7 +36,6 @@ jobs:
       - name: Run Python linter
         run: flake8 .
 
-      # ---- LUA ----
       - name: Install Lua linter
         run: |
           sudo apt-get update
