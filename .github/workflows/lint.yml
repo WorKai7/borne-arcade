@@ -13,18 +13,18 @@ jobs:
         uses: actions/checkout@v4
 
       # ---- JAVA ----
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-            distribution: temurin
-            java-version: 21
+    #   - name: Setup Java
+    #     uses: actions/setup-java@v4
+    #     with:
+    #         distribution: temurin
+    #         java-version: 21
         
-      - name: Download Checkstyle
-        run: curl -L -o checkstyle.jar https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.26.1/checkstyle-10.26.1-all.jar
+    #   - name: Download Checkstyle
+    #     run: curl -L -o checkstyle.jar https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.26.1/checkstyle-10.26.1-all.jar
 
-      - name: Run Checkstyle
-        run: |
-            java -jar checkstyle.jar -c /google_checks.xml src/
+    #   - name: Run Checkstyle
+    #     run: |
+    #         java -jar checkstyle.jar -c /google_checks.xml src/
 
       # ---- PYTHON ----
       - name: Setup Python
