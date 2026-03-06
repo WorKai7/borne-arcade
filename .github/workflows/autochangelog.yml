@@ -1,4 +1,4 @@
-name: Auto Changelog
+name: Auto Changelog via Ollama API
 
 on:
   pull_request:
@@ -11,12 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup Ollama
-        run: |
-          curl -sSfL https://ollama.com/install.sh | sh
-          ollama pull llama2
-          ollama --version
+        with:
+          fetch-depth: 0
 
       - name: Generate changelog filename
         id: changelog
@@ -25,16 +21,25 @@ jobs:
           echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
           mkdir -p changelog
           echo "Changelog file: $FILE_NAME"
-    
+
       - name: Fetch main branch
         run: git fetch origin main
 
-      - name: Generate changelog with Ollama
+      - name: Generate changelog via Ollama API
+        env:
+          OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
         run: |
-          ollama serve &
-          ollama run llama2 \
-            --prompt "Generate a changelog for the PR with the following commits:\n$(git log origin/main..HEAD --oneline)" \
-            > $FILE_NAME
+          COMMITS=$(git log origin/main..HEAD --oneline)
+          
+          RESPONSE=$(curl -s -X POST "https://api.ollama.com/v1/generate" \
+            -H "Authorization: Bearer $OLLAMA_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+                  "model": "llama2",
+                  "prompt": "Generate a changelog in markdown format for the following commits:\n'"$COMMITS"'"
+                }')
+          
+          echo "$RESPONSE" > $FILE_NAME
 
       - name: Add changelog to git
         run: |
