@@ -19,12 +19,13 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Run Java Checkstyle
-        uses: dbelyaev/action-checkstyle@v3
+      - name: Run Java Checkstyle with Reviewdog
+        uses: reviewdog/action-checkstyle@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-check
-          level: error
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            reporter: github-pr-review # affiche dans la PR
+            level: error
+            fail_on_error: true
 
       # ---- PYTHON ----
       - name: Setup Python
