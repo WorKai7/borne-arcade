@@ -29,3 +29,5 @@ Puis les scripts de lancement des jeux ne fonctionnaient pas pour la plupart.
 - Suppression du ```cd projet/[nom-projet]``` et changement de la classe a executer en ajoutant le chemin entier à cause de la ligne ```package ...``` au début des fichiers ```Main.java``` dans certains projets
 
 Le jeu ```Puissance_X``` ne contenait pas de ```photo-small.png``` donc j'en ai rajouté une.
+
+## Automatisation
