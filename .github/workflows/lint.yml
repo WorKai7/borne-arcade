@@ -16,16 +16,15 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: 21
+            distribution: temurin
+            java-version: 21
+        
+      - name: Download Checkstyle
+        run: curl -L -o checkstyle.jar https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.26.1/checkstyle-10.26.1-all.jar
 
-      - name: Run Java Checkstyle with Reviewdog
-        uses: reviewdog/action-checkstyle@v2
-        with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            reporter: github-pr-review # affiche dans la PR
-            level: error
-            fail_on_error: true
+      - name: Run Checkstyle
+        run: |
+            java -jar checkstyle.jar -c /google_checks.xml src/
 
       # ---- PYTHON ----
       - name: Setup Python
