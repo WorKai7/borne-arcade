@@ -1,4 +1,4 @@
-name: Lint
+name: Lint Code
 
 on:
   push:
@@ -19,12 +19,12 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Run Checkstyle
-        uses: andrewmcodes/checkstyle-action@v1
+      - name: Run Java Checkstyle
+        uses: dbelyaev/action-checkstyle@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          # optionally specify your config:
-          # config_file: config/checkstyle/checkstyle.xml
+          reporter: github-pr-check
+          level: error
 
       # ---- PYTHON ----
       - name: Setup Python
