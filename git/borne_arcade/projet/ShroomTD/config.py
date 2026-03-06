@@ -80,4 +80,4 @@ def handle_arcade_inputs():
 
 def draw_cursor(surface):
     x, y = pygame.mouse.get_pos()
-    pygame.draw.circle(surface, (255,255,255,255), (x,y),10)
+    pygame.draw.circle(surface, (180,180,180,255), (x,y),10)
