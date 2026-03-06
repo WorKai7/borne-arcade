@@ -1,4 +1,4 @@
-name: Lint Code
+name: Lint
 
 on:
   push:
@@ -20,9 +20,11 @@ jobs:
           java-version: 21
 
       - name: Run Checkstyle
-        uses: nikitasavinov/checkstyle-action@v1
+        uses: andrewmcodes/checkstyle-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          # optionally specify your config:
+          # config_file: config/checkstyle/checkstyle.xml
 
       # ---- PYTHON ----
       - name: Setup Python
