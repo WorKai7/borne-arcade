@@ -25,12 +25,15 @@ jobs:
           echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
           mkdir -p changelog
           echo "Changelog file: $FILE_NAME"
+    
+      - name: Fetch main branch
+        run: git fetch origin main
 
       - name: Generate changelog with Ollama
         run: |
-          ollama generate llama2 \
+          ollama run llama2 \
             --prompt "Generate a changelog for the PR with the following commits:\n$(git log origin/main..HEAD --oneline)" \
-            --output $FILE_NAME
+            > $FILE_NAME
 
       - name: Add changelog to git
         run: |
